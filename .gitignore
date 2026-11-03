@@ -1,0 +1,17 @@
+# Model weights and data live on Hugging Face / Kaggle, not in git
+*.pth
+*.pt
+*.ckpt
+data/
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
