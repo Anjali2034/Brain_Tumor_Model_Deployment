@@ -1,0 +1,50 @@
+name: Deploy to Hugging Face Space
+
+# Runs whenever the demo app changes on main, or manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - ".github/workflows/deploy-to-huggingface.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install the Hugging Face client
+        run: pip install "huggingface_hub>=0.25"
+
+      - name: Upload app/ to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SPACE_ID: Anjali2034/Brain_tumor_deployment_model
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::Add a Hugging Face write token as the repo secret HF_TOKEN (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          python - <<'PY'
+          import os
+          from huggingface_hub import upload_folder
+
+          upload_folder(
+              folder_path="app",
+              repo_id=os.environ["SPACE_ID"],
+              repo_type="space",
+              token=os.environ["HF_TOKEN"],
+              # The model weights live only on the Space; never overwrite or delete them from here.
+              ignore_patterns=["*.pth", "__pycache__/*", "*.pyc"],
+              commit_message=f"Sync app from GitHub ({os.environ['GITHUB_SHA'][:7]})",
+          )
+          print("Deployed app/ to https://huggingface.co/spaces/" + os.environ["SPACE_ID"])
+          PY

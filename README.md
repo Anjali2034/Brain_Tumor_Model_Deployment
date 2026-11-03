@@ -9,6 +9,7 @@ Trained on Kaggle, deployed as a live web demo on Hugging Face.
 [![Notebook](https://img.shields.io/badge/Notebook-Kaggle-20BEFF?logo=kaggle&logoColor=fff)](https://www.kaggle.com/code/anjali2034/modeldeployment)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=fff)
 ![Gradio](https://img.shields.io/badge/Gradio-F97316?logo=gradio&logoColor=fff)
+[![Deploy to Hugging Face](https://github.com/Anjali2034/Brain_Tumor_Model_Deployment/actions/workflows/deploy-to-huggingface.yml/badge.svg)](https://github.com/Anjali2034/Brain_Tumor_Model_Deployment/actions/workflows/deploy-to-huggingface.yml)
 
 <img src="assets/prediction_example.png" width="380" alt="Model prediction: tumour region outlined on an MRI slice">
 
@@ -52,10 +53,28 @@ MRI slice  ->  resize to 256x256, normalise  ->  U-Net  ->  per-pixel probabilit
 
 ---
 
+## Deployment
+
+The demo is deployed automatically. Every push to `main` that changes `app/` runs a
+[GitHub Action](.github/workflows/deploy-to-huggingface.yml) that uploads the app to the
+[Hugging Face Space](https://huggingface.co/spaces/Anjali2034/Brain_tumor_deployment_model), which then rebuilds.
+
+```
+GitHub (main)  ->  GitHub Actions  ->  Hugging Face Space  ->  live Gradio demo
+```
+
+- The model weights (`best_model.pth`) stay on the Space and are never overwritten by the workflow.
+- The workflow uses a Hugging Face write token stored as the repository secret `HF_TOKEN`.
+- It can also be run by hand from the Actions tab (Run workflow).
+
+---
+
 ## Repository structure
 
 ```
 brain-tumor-segmentation/
+├── .github/workflows/
+│   └── deploy-to-huggingface.yml        # auto-deploys app/ to Hugging Face
 ├── notebook/
 │   └── brain_tumor_segmentation.ipynb   # data prep, training, evaluation (Kaggle)
 ├── app/
