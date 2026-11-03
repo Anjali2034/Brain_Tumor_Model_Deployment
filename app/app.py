@@ -121,7 +121,7 @@ def segment(image: np.ndarray):
 # ------------------------------------------------------------------- UI ----
 EXAMPLES = [
     os.path.join(EXAMPLES_DIR, f)
-    for f in ["sample_1_tumour.png", "sample_2_tumour.png", "sample_3_no_tumour.png"]
+    for f in ["sample_tumour.png", "sample_no_tumour.png"]
     if os.path.exists(os.path.join(EXAMPLES_DIR, f))
 ]
 
